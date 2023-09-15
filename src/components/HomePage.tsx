@@ -2,6 +2,7 @@ import React from "react";
 import LeftContent from "./LeftContent";
 import Steps from "./Steps";
 import FirstFormFields from "./FirstFormFields";
+import SecondFormField from "./SecondFormField";
 
 const HomePage = () => {
   return (
@@ -13,20 +14,20 @@ const HomePage = () => {
         <div className="right w-full lg:w-[50%] 2xl:w-[667px] pt-[60px] px-5 md:px-10 lg:px-[40px] shadow-lg rounded-[16px]">
           <Steps></Steps>
           <div className="w-full h-[1px] bg-gray-300 mt-4"></div>
-          <h2 className="mt-4 mb-[32px] text-[30px] lg:text-[36px] ">
-            Contact Information
-            <div className="">
-              <form>
-                <FirstFormFields></FirstFormFields>
 
-                <div className="w-full flex justify-center mx-auto my-[100px]">
-                  <button className="text-white rounded-md opacity-50 text-[20px] w-full bg-[#0967AF] font-semibold py-4 ">
-                    Next
-                  </button>
-                </div>
-              </form>
-            </div>
-          </h2>
+          <div className="">
+            <form>
+              <FirstFormFields></FirstFormFields>
+
+              <div className="w-full flex justify-center mx-auto my-[100px]">
+                <button className="text-white rounded-md opacity-50 text-[20px] w-full bg-[#0967AF] font-semibold py-4 ">
+                  Next
+                </button>
+              </div>
+
+              <SecondFormField></SecondFormField>
+            </form>
+          </div>
         </div>
       </div>
     </div>

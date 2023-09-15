@@ -4,12 +4,15 @@ import React from "react";
 const FirstFormFields = () => {
   return (
     <div className="">
+      <h2 className="mt-4 mb-[32px] text-[30px] lg:text-[36px] ">
+        Contact Information{" "}
+      </h2>
       <div className="">
         <label className="text-[20px] font-semibold text-[#666]" htmlFor="">
           First Name <span className="text-[#B91C1C]">*</span>{" "}
         </label>
         <input
-          className="outline-none px-4 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded"
+          className="outline-none focus:border-blue-300 px-4 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded"
           type="text"
           placeholder="Jhon"
         />
@@ -19,27 +22,30 @@ const FirstFormFields = () => {
           Last Name <span className="text-[#B91C1C]">*</span>{" "}
         </label>
         <input
-          className="outline-none px-4 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded"
+          className="outline-none focus:border-blue-300 px-4 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded"
           type="text"
           placeholder="Doe"
         />
       </div>
       <div className="">
-        <label className="text-[20px] font-semibold text-[#666]" htmlFor="">
+        <label
+          className="text-[20px] focus:border-blue-300 font-semibold text-[#666]"
+          htmlFor=""
+        >
           Email <span className="text-[#B91C1C]">*</span>{" "}
         </label>
         <input
-          className="outline-none px-4 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded"
+          className="outline-none focus:border-blue-300 px-4 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded"
           type="email"
           placeholder="anisha@gmail.com"
         />
       </div>
       <div className="">
-        <label className="text-[20px] font-semibold text-[#666]" htmlFor="">
+        <label className="text-[20px]  font-semibold text-[#666]" htmlFor="">
           Confirm Email
         </label>
         <input
-          className="outline-none px-4 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded"
+          className="outline-none px-4 focus:border-blue-300 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded"
           type="email"
           placeholder="anisha@gmail.com"
         />
