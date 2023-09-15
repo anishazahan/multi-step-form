@@ -1,13 +1,11 @@
 // redux/store.ts
 import { configureStore } from "@reduxjs/toolkit";
-
-// Import your reducers here
-import yourReducer from "./yourReducer";
+import stepSlice from "./stepSlice";
 
 const store = configureStore({
   reducer: {
-    // Add your reducers here
-    yourReducer,
+    step: stepSlice, // Add the stepSlice reducer under the 'step' key
+    // Add your other reducers here
   },
 });
 
