@@ -11,18 +11,46 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
 
   const handleNextClick = (e: { preventDefault: () => void }) => {
-    e.preventDefault(); // Prevent the default form submission behavior
+    e.preventDefault();
 
-    setLoading(true); // Set loading to true to display loading state
+    setLoading(true);
 
-    // Simulate a delay using setTimeout
     setTimeout(() => {
       if (activeStep < 4) {
         setActiveStep(activeStep + 1);
-        setLoading(false); // Turn off loading after the delay
+        setLoading(false);
       }
-    }, 2000); // Adjust the delay duration as needed
+    }, 1000); // Adjust the delay duration as needed
   };
+
+  const handlePrevClick = () => {
+    if (activeStep > 1) {
+      setActiveStep(activeStep - 1);
+    }
+  };
+
+  const isLastStep = activeStep === 4;
+  const isFirstStep = activeStep === 1;
+
+  let formFieldComponent;
+
+  switch (activeStep) {
+    case 1:
+      formFieldComponent = <FirstFormFields />;
+      break;
+    case 2:
+      formFieldComponent = <SecondFormField />;
+      break;
+    case 3:
+      formFieldComponent = <ThirdFormField />;
+      break;
+    case 4:
+      formFieldComponent = <FourthFormField />;
+      break;
+    default:
+      formFieldComponent = null;
+      break;
+  }
 
   return (
     <div>
@@ -35,25 +63,42 @@ const HomePage = () => {
           <div className="w-full h-[1px] bg-gray-300 mt-4"></div>
 
           <div className="">
-            <form onSubmit={handleNextClick}>
-              {activeStep === 1 && <FirstFormFields />}
-              {activeStep === 2 && <SecondFormField />}
-              {activeStep === 3 && <ThirdFormField />}
-              {activeStep === 4 && <FourthFormField />}
+            <form>
+              {formFieldComponent}
 
-              <div className="w-full flex justify-center mx-auto my-[100px]">
-                {activeStep < 4 ? (
-                  loading ? ( // Show loading state
-                    <div>Loading...</div>
-                  ) : (
+              <div className="w-full space-x-10 justify-between flex mx-auto my-[100px]">
+                {isFirstStep ? (
+                  <button
+                    type="button" // Change the type to "button"
+                    onClick={handleNextClick}
+                    className="text-white rounded-md opacity-50 text-[20px] w-full bg-[#0967AF] font-semibold py-4"
+                    disabled={loading} // Disable the button while loading
+                  >
+                    {loading ? "Loading..." : "Next"}
+                  </button>
+                ) : (
+                  <>
                     <button
-                      type="submit"
-                      className="text-white rounded-md opacity-50 text-[20px] w-full bg-[#0967AF] font-semibold py-4 "
+                      type="button"
+                      onClick={handlePrevClick}
+                      className="text-white rounded-md text-[20px] w-full bg-[#0967AF] font-semibold py-4 mr-2"
                     >
-                      Next
+                      Previous
                     </button>
-                  )
-                ) : null}
+                    {isLastStep ? (
+                      <div>Submit</div>
+                    ) : (
+                      <button
+                        type="button" // Change the type to "button"
+                        onClick={handleNextClick}
+                        className="text-white rounded-md opacity-50 text-[20px] w-full bg-[#0967AF] font-semibold py-4"
+                        disabled={loading} // Disable the button while loading
+                      >
+                        {loading ? "Loading..." : "Next"}
+                      </button>
+                    )}
+                  </>
+                )}
               </div>
             </form>
           </div>
