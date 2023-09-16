@@ -104,7 +104,7 @@ const HomePage = () => {
         const lastName = watch("lastName");
         const email = watch("email");
         const termsOfService = watch("termsOfService");
-        // Validate fields here
+
         const isStep1Valid = firstName && lastName && email && termsOfService;
         dispatch(setStepValid({ step: 1, valid: isStep1Valid }));
         return isStep1Valid;
@@ -113,7 +113,7 @@ const HomePage = () => {
         const isStep2Valid = password;
         dispatch(setStepValid({ step: 2, valid: isStep2Valid }));
         return isStep2Valid;
-        // Password validation is handled by yup schema, no need for passwordIsValid function.
+
         return true;
       case 3:
         try {
@@ -126,7 +126,6 @@ const HomePage = () => {
           dispatch(setStepValid({ step: 3, valid: true }));
           return true;
         } catch (error) {
-          // Validation failed
           dispatch(setStepValid({ step: 3, valid: false }));
           return false;
         }
@@ -136,7 +135,6 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    // Reset the form fields when switching steps
     reset();
   }, [activeStep, reset]);
 
@@ -147,13 +145,13 @@ const HomePage = () => {
       case 1:
         return (
           <div className="">
-            {/* ... Your form fields ... */}
+            {/* ... My form fields ... */}
             <div className="">
               <h2 className="mt-4 mb-[32px] text-[30px] lg:text-[36px] ">
                 Contact Information{" "}
               </h2>{" "}
               <div className="space-y-3">
-                <div className="">
+                <div className="space-y-2">
                   <label
                     className="text-[20px] font-semibold text-[#666]"
                     htmlFor="firstName"
@@ -176,7 +174,7 @@ const HomePage = () => {
                   )}
                 </div>
 
-                <div className="">
+                <div className="space-y-2">
                   <label
                     className="text-[20px] font-semibold text-[#666]"
                     htmlFor="lastName"
@@ -199,7 +197,7 @@ const HomePage = () => {
                   )}
                 </div>
 
-                <div className="">
+                <div className="space-y-2">
                   <label
                     className="text-[20px] focus.borderColor-blue-300 font-semibold text-[#666]"
                     htmlFor="email"
@@ -226,7 +224,7 @@ const HomePage = () => {
                   )}
                 </div>
 
-                <div className="">
+                <div className="space-y-2">
                   <label
                     className="text-[20px]  font-semibold text-[#666]"
                     htmlFor="confirmEmail"
@@ -285,11 +283,6 @@ const HomePage = () => {
                   </label>
                 </div>
               </div>
-              {/* {errors.mailingList && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.mailingList.message}
-                </p>
-              )} */}
               {errors.termsOfService && (
                 <div className="flex space-x-2 items-center">
                   <Image className="mt-3" src={img} alt="" />
@@ -301,7 +294,7 @@ const HomePage = () => {
             </div>
           </div>
         );
-      // Handle other steps here...
+
       case 2:
         return (
           <div>
@@ -345,7 +338,6 @@ const HomePage = () => {
                       minLength: value.length >= 8,
                     });
 
-                    // Determine the border color based on validation criteria
                     if (value.length === 0) {
                       setBorderColor("gray");
                       setShowErrors(false); // Hide errors when the input is empty
@@ -357,10 +349,10 @@ const HomePage = () => {
                       passwordValidation.minLength
                     ) {
                       setBorderColor("green");
-                      setShowErrors(false); // Hide errors when all criteria are met
+                      setShowErrors(false); // Hide errors when all criteria are requiree
                     } else {
                       setBorderColor("red");
-                      setShowErrors(true); // Show errors when the criteria are not met
+                      setShowErrors(true); // Show errors when the criteria are not requiree
                     }
                   }}
                   required
@@ -368,7 +360,7 @@ const HomePage = () => {
 
                 <p
                   className="absolute text-xl text-gray-500 top-1/2 right-2 transform -translate-y-1/2 cursor-pointer"
-                  onClick={() => setPasswordVisible(!passwordVisible)} // Toggle password visibility
+                  onClick={() => setPasswordVisible(!passwordVisible)} // Toggle password
                 >
                   {passwordVisible ? (
                     <AiFillEye></AiFillEye>
@@ -551,7 +543,7 @@ const HomePage = () => {
                     {...register("expiryMonth", {
                       required: "Expiry Month is required",
                     })}
-                    className={`outline-none focus:border-blue-300 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded ${
+                    className={`outline-none focus:border-blue-300 px-5 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded ${
                       errors.expiryMonth ? "border-red-500" : ""
                     }`}
                   >
@@ -579,7 +571,7 @@ const HomePage = () => {
                     {...register("expiryYear", {
                       required: "Expiry Year is required",
                     })}
-                    className={`outline-none focus:border-blue-300 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded ${
+                    className={`outline-none px-5 focus:border-blue-300 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded ${
                       errors.expiryYear ? "border-red-500" : ""
                     }`}
                   >
@@ -607,7 +599,7 @@ const HomePage = () => {
                     {...register("cv", {
                       required: "CV is required",
                     })}
-                    className={`outline-none focus:border-blue-300 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded ${
+                    className={`outline-none px-5 focus:border-blue-300 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded ${
                       errors.cv ? "border-red-500" : ""
                     }`}
                   >
@@ -632,7 +624,7 @@ const HomePage = () => {
     }
   };
 
-  // Function to update form data for each step
+  // Ffnction to update form data
   const updateStepData = (step, data) => {
     switch (step) {
       case 1:
@@ -649,17 +641,22 @@ const HomePage = () => {
     }
   };
 
-  // Function to handle form submission
+  // ...Function to handle form submission
   const handleFormSubmit = () => {
-    // Combine form data from all steps
+    // .....Combine form data from all steps
     const formDataAllSteps = {
       step1: step1Data,
       step2: step2Data,
       step3: step3Data,
     };
 
-    // Send a POST request to your API
-    fetch("http://localhost:5000/api/formdata", {
+    const formDataJson = JSON.stringify({ data: formDataAllSteps });
+
+    // ........... local storage
+    localStorage.setItem("formData", formDataJson);
+
+    // .......Send a POST request to your API
+    fetch("https://vercel.com/anishazahan/next-portfolio-server/api/formdata", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -696,14 +693,14 @@ const HomePage = () => {
                   <button
                     type="button"
                     onClick={handlePrevClick}
-                    className="text-white rounded-md text-[20px] w-full bg-[#0967AF] font-semibold py-4 mr-2"
+                    className="text-[#0967AF] rounded-md text-[20px] w-full border-2 border-[#0967AF] font-semibold py-4 mr-2"
                   >
-                    Previous
+                    Back
                   </button>
                 )}
                 {activeStep === 3 ? (
                   <button
-                    type="submit" // Change to type="submit" to trigger form submission
+                    type="submit"
                     className="text-white rounded-md text-[20px] w-full bg-[#0967AF] font-semibold py-4"
                     disabled={!validateStepFields(activeStep)}
                   >
@@ -734,7 +731,7 @@ const HomePage = () => {
                   <p className="text-2xl font-bold mt-3 mb-4 text-center">
                     {popupMessage ? popupMessage : "Form submitted Successful!"}
                   </p>
-
+                  <p>See Form Data in Local Storage</p>
                   <div className="flex justify-center space-x-4 items-center mt-8">
                     <button
                       className="px-6 py-2 bg-purple-700 text-white rounded-sm font-bold"
