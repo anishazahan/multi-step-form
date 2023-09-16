@@ -401,7 +401,7 @@ const HomePage = () => {
 
               {/* Error message section */}
               <div className={`space-y-2 ${showErrors ? "block" : "hidden"}`}>
-                <div className="flex items-center space-x-10">
+                <div className="flex flex-col md:flex-row space-y-2 lg:space-y-0 md:items-center md:space-x-10">
                   {passwordValidation.specialChar ? (
                     <div className="flex space-x-3 items-center mt-2">
                       <p className="text-xl text-blue-600">
@@ -440,7 +440,7 @@ const HomePage = () => {
                   )}
                 </div>
 
-                <div className="flex items-center space-x-[105px]">
+                <div className="flex flex-col md:flex-row space-y-2 lg:space-y-0 md:items-center md:space-x-10 lg:space-x-[105px]">
                   {passwordValidation.number ? (
                     <div className="flex space-x-3 items-center mt-2">
                       <p className="text-xl text-blue-600">
@@ -655,6 +655,8 @@ const HomePage = () => {
     // ........... local storage
     localStorage.setItem("formData", formDataJson);
 
+    setShowPopup(true);
+
     // .......Send a POST request to your API
     fetch("https://vercel.com/anishazahan/next-portfolio-server/api/formdata", {
       method: "POST",
@@ -665,7 +667,7 @@ const HomePage = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.message);
+        // console.log(data.message);
         // Show the success message
         setShowPopup(true);
         setPopupMessage(data.message);
