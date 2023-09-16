@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import { setActiveStep, setStepValid } from "../redux/stepSlice";
 import { RootState } from "@/redux/store";
+import img from "../assets/img/dot.png";
 
 import {
   AiFillEyeInvisible,
@@ -15,6 +16,7 @@ import {
 import { BsCheckLg } from "react-icons/bs";
 import { RiErrorWarningFill, RiErrorWarningLine } from "react-icons/ri";
 import * as yup from "yup";
+import Image from "next/image";
 
 const HomePage = () => {
   //............for password.........
@@ -37,7 +39,7 @@ const HomePage = () => {
     register,
     watch,
     reset,
-    getValues, // Add getValues from react-hook-form
+    getValues,
   } = useForm({});
 
   // State variables to store form data for each step
@@ -60,26 +62,11 @@ const HomePage = () => {
   const activeStep = useSelector((state: RootState) => state.step.activeStep);
   const dispatch = useDispatch();
 
-  // const handleNextClick = () => {
-  //   // Validate the form before allowing navigation
-  //   handleSubmit((data) => {
-  //     // Assuming you have a function to validate each step's fields
-  //     const isValid = validateStepFields(activeStep);
-
-  //     if (activeStep < 3 && isValid) {
-  //       dispatch(setActiveStep(activeStep + 1));
-  //     }
-  //   })();
-  // };
-
   const handleNextClick = async () => {
-    // Move to the next step only if the current step is valid
     const isValid = await validateStepFields(activeStep);
     if (activeStep < 3 && isValid) {
-      // Update form data for the current step
       updateStepData(activeStep, getValues());
 
-      // Move to the next step
       dispatch(setActiveStep(activeStep + 1));
     }
   };
@@ -105,18 +92,6 @@ const HomePage = () => {
     cv: yup.string().required("CV is required"),
   });
 
-  // const validateStep2Fields = () => {
-  //   const password = watch("password");
-
-  //   // Define your password validation logic here
-  //   const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/.test(
-  //     password
-  //   );
-  //   const isMinLengthValid = password.length >= 8;
-
-  //   return isPasswordValid && isMinLengthValid;
-  // };
-
   //..................validation step..........
 
   const validateStepFields = async (step: number): Promise<boolean> => {
@@ -125,8 +100,9 @@ const HomePage = () => {
         const firstName = watch("firstName");
         const lastName = watch("lastName");
         const email = watch("email");
+        const termsOfService = watch("termsOfService");
         // Validate fields here
-        const isStep1Valid = firstName && lastName && email;
+        const isStep1Valid = firstName && lastName && email && termsOfService;
         dispatch(setStepValid({ step: 1, valid: isStep1Valid }));
         return isStep1Valid;
       case 2:
@@ -280,7 +256,10 @@ const HomePage = () => {
                   <input
                     type="checkbox"
                     id="termsOfServiceCheckbox"
-                    {...register("termsOfService")}
+                    {...register("termsOfService", {
+                      required:
+                        "You must accept the policies in order to use Life Process Program",
+                    })}
                   />
                   <label
                     htmlFor="termsOfServiceCheckbox"
@@ -303,15 +282,18 @@ const HomePage = () => {
                   </label>
                 </div>
               </div>
-              {errors.mailingList && (
+              {/* {errors.mailingList && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors.mailingList.message}
                 </p>
-              )}
+              )} */}
               {errors.termsOfService && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.termsOfService.message}
-                </p>
+                <div className="flex space-x-2 items-center">
+                  <Image className="mt-3" src={img} alt="" />
+                  <p className="text-[#DFA129] text-sm mt-4">
+                    {errors.termsOfService.message}
+                  </p>
+                </div>
               )}
             </div>
           </div>
@@ -708,19 +690,6 @@ const HomePage = () => {
                     Submit
                   </button>
                 ) : (
-                  // <button
-                  //   type="button"
-                  //   onClick={() => {
-                  //     // Store form data for the current step
-                  //     updateStepData(activeStep, getValues());
-                  //     handleNextClick();
-                  //   }}
-                  //   className={`text-white rounded-md text-[20px] w-full bg-[#0967AF] font-semibold py-4`}
-                  //   disabled={!validateStepFields(activeStep)}
-                  // >
-                  //   {loading ? "Loading..." : "Next"}
-                  // </button>
-
                   <button
                     type="button"
                     onClick={handleSubmit(handleNextClick)}
