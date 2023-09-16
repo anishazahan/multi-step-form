@@ -4,7 +4,8 @@ import stepSlice from "./stepSlice";
 
 const store = configureStore({
   reducer: {
-    step: stepSlice, // Add the stepSlice reducer under the 'step' key
+    step: stepSlice,
+
     // Add your other reducers here
   },
 });

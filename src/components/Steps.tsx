@@ -1,14 +1,13 @@
-// Steps.tsx
+import { RootState } from "@/redux/store";
 import React from "react";
+import { useSelector } from "react-redux";
 
-interface StepsProps {
-  activeStep: number;
-}
+const Steps: React.FC = () => {
+  const activeStep = useSelector((state: RootState) => state.step.activeStep);
 
-const Steps: React.FC<StepsProps> = ({ activeStep }) => {
   return (
     <div className="flex items-center space-x-[46px]">
-      {[1, 2, 3, 4].map((stepNumber) => (
+      {[1, 2, 3].map((stepNumber) => (
         <p
           key={stepNumber}
           className={`font-semibold text-[20px] ${
