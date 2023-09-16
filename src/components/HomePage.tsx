@@ -29,6 +29,7 @@ const HomePage = () => {
   });
   const [borderColor, setBorderColor] = useState("gray");
   const [showErrors, setShowErrors] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const {
     handleSubmit,
@@ -39,24 +40,21 @@ const HomePage = () => {
     getValues, // Add getValues from react-hook-form
   } = useForm({});
 
-  // State variable to store form data
-  const [formData, setFormData] = useState({
-    step1: {
-      firstName: "",
-      lastName: "",
-      email: "",
-    },
-    step2: {
-      password: "",
-    },
-    step3: {
-      cardNumber: "",
-      expiryMonth: "",
-      expiryYear: "",
-      cv: "",
-    },
+  // State variables to store form data for each step
+  const [step1Data, setStep1Data] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
   });
-
+  const [step2Data, setStep2Data] = useState({
+    password: "",
+  });
+  const [step3Data, setStep3Data] = useState({
+    cardNumber: "",
+    expiryMonth: "",
+    expiryYear: "",
+    cv: "",
+  });
   //...............for steps............
 
   const activeStep = useSelector((state: RootState) => state.step.activeStep);
@@ -76,7 +74,12 @@ const HomePage = () => {
 
   const handleNextClick = async () => {
     // Move to the next step only if the current step is valid
-    if (activeStep < 3 && (await validateStepFields(activeStep))) {
+    const isValid = await validateStepFields(activeStep);
+    if (activeStep < 3 && isValid) {
+      // Update form data for the current step
+      updateStepData(activeStep, getValues());
+
+      // Move to the next step
       dispatch(setActiveStep(activeStep + 1));
     }
   };
@@ -101,6 +104,18 @@ const HomePage = () => {
     expiryYear: yup.string().required("Expiry Year is required"),
     cv: yup.string().required("CV is required"),
   });
+
+  // const validateStep2Fields = () => {
+  //   const password = watch("password");
+
+  //   // Define your password validation logic here
+  //   const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/.test(
+  //     password
+  //   );
+  //   const isMinLengthValid = password.length >= 8;
+
+  //   return isPasswordValid && isMinLengthValid;
+  // };
 
   //..................validation step..........
 
@@ -155,7 +170,6 @@ const HomePage = () => {
           <div className="">
             {/* ... Your form fields ... */}
             <div className="">
-              {" "}
               <h2 className="mt-4 mb-[32px] text-[30px] lg:text-[36px] ">
                 Contact Information{" "}
               </h2>{" "}
@@ -186,14 +200,15 @@ const HomePage = () => {
                 <div className="">
                   <label
                     className="text-[20px] font-semibold text-[#666]"
-                    htmlFor=""
+                    htmlFor="lastName"
                   >
                     Last Name <span className="text-[#B91C1C]">*</span>{" "}
                   </label>
                   <input
+                    id="lastName"
                     className="outline-none focus:border-blue-300 px-4 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded"
                     {...register("lastName", {
-                      required: "last Name is required",
+                      required: "Last Name is required",
                     })}
                     type="text"
                     placeholder="Doe"
@@ -208,12 +223,12 @@ const HomePage = () => {
                 <div className="">
                   <label
                     className="text-[20px] focus.borderColor-blue-300 font-semibold text-[#666]"
-                    htmlFor="email" // Add the "htmlFor" attribute with the correct input field id
+                    htmlFor="email"
                   >
                     Email <span className="text-[#B91C1C]">*</span>{" "}
                   </label>
                   <input
-                    id="email" // Add the "id" attribute to match the "htmlFor" in the label
+                    id="email"
                     className="outline-none focus:border-blue-300 px-4 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded"
                     {...register("email", {
                       required: "Email is required",
@@ -225,7 +240,7 @@ const HomePage = () => {
                     type="email"
                     placeholder="anisha@gmail.com"
                   />
-                  {errors.email && ( // Change "errors.firstName" to "errors.email"
+                  {errors.email && (
                     <p className="text-red-500 text-sm mt-1">
                       {errors.email.message}
                     </p>
@@ -235,7 +250,7 @@ const HomePage = () => {
                 <div className="">
                   <label
                     className="text-[20px]  font-semibold text-[#666]"
-                    htmlFor=""
+                    htmlFor="confirmEmail"
                   >
                     Confirm Email
                   </label>
@@ -633,27 +648,35 @@ const HomePage = () => {
   };
 
   // Function to update form data for each step
-  const updateFormData = (step: number, data: any) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [step]: data,
-    }));
+  const updateStepData = (step, data) => {
+    switch (step) {
+      case 1:
+        setStep1Data(data);
+        break;
+      case 2:
+        setStep2Data(data);
+        break;
+      case 3:
+        setStep3Data(data);
+        break;
+      default:
+        break;
+    }
   };
 
+  // Function to handle form submission
   const handleFormSubmit = () => {
     // Combine form data from all steps
     const formDataAllSteps = {
-      step1: formData.step1,
-      step2: formData.step2,
-      step3: getValues(), // Use getValues to get data for the current step (step3)
+      step1: step1Data,
+      step2: step2Data,
+      step3: step3Data,
     };
 
-    // Log the combined form data
+    // Log the combined form data when the form is submitted
     console.log("Form data submitted:", formDataAllSteps);
-
     // You can submit this data to your backend or perform any other necessary actions
   };
-
   return (
     <div>
       <div className="flex flex-col lg:flex-row my-[5%] px-3 md:px-10 2xl:px-0 mx-auto lg:justify-center gap-[28px]">
@@ -678,20 +701,29 @@ const HomePage = () => {
                 )}
                 {activeStep === 3 ? (
                   <button
-                    type="submit"
+                    type="submit" // Change to type="submit" to trigger form submission
                     className="text-white rounded-md text-[20px] w-full bg-[#0967AF] font-semibold py-4"
                     disabled={!validateStepFields(activeStep)}
                   >
                     Submit
                   </button>
                 ) : (
+                  // <button
+                  //   type="button"
+                  //   onClick={() => {
+                  //     // Store form data for the current step
+                  //     updateStepData(activeStep, getValues());
+                  //     handleNextClick();
+                  //   }}
+                  //   className={`text-white rounded-md text-[20px] w-full bg-[#0967AF] font-semibold py-4`}
+                  //   disabled={!validateStepFields(activeStep)}
+                  // >
+                  //   {loading ? "Loading..." : "Next"}
+                  // </button>
+
                   <button
                     type="button"
-                    onClick={() => {
-                      // Store form data for the current step
-                      updateFormData(activeStep, getValues());
-                      handleNextClick();
-                    }}
+                    onClick={handleSubmit(handleNextClick)}
                     className={`text-white rounded-md text-[20px] w-full bg-[#0967AF] font-semibold py-4`}
                     disabled={!validateStepFields(activeStep)}
                   >
