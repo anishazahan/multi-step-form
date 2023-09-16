@@ -36,23 +36,49 @@ const HomePage = () => {
     register,
     watch,
     reset,
+    getValues, // Add getValues from react-hook-form
   } = useForm({});
+
+  // State variable to store form data
+  const [formData, setFormData] = useState({
+    step1: {
+      firstName: "",
+      lastName: "",
+      email: "",
+    },
+    step2: {
+      password: "",
+    },
+    step3: {
+      cardNumber: "",
+      expiryMonth: "",
+      expiryYear: "",
+      cv: "",
+    },
+  });
 
   //...............for steps............
 
   const activeStep = useSelector((state: RootState) => state.step.activeStep);
   const dispatch = useDispatch();
 
-  const handleNextClick = () => {
-    // Validate the form before allowing navigation
-    handleSubmit((data) => {
-      // Assuming you have a function to validate each step's fields
-      const isValid = validateStepFields(activeStep);
+  // const handleNextClick = () => {
+  //   // Validate the form before allowing navigation
+  //   handleSubmit((data) => {
+  //     // Assuming you have a function to validate each step's fields
+  //     const isValid = validateStepFields(activeStep);
 
-      if (activeStep < 3 && isValid) {
-        dispatch(setActiveStep(activeStep + 1));
-      }
-    })();
+  //     if (activeStep < 3 && isValid) {
+  //       dispatch(setActiveStep(activeStep + 1));
+  //     }
+  //   })();
+  // };
+
+  const handleNextClick = async () => {
+    // Move to the next step only if the current step is valid
+    if (activeStep < 3 && (await validateStepFields(activeStep))) {
+      dispatch(setActiveStep(activeStep + 1));
+    }
   };
 
   const handlePrevClick = () => {
@@ -78,7 +104,7 @@ const HomePage = () => {
 
   //..................validation step..........
 
-  const validateStepFields = (step: number): boolean => {
+  const validateStepFields = async (step: number): Promise<boolean> => {
     switch (step) {
       case 1:
         const firstName = watch("firstName");
@@ -490,7 +516,7 @@ const HomePage = () => {
             </h2>
 
             <div className="">
-              <div className="space-y-2">
+              <div className="space-y-2 mb-2">
                 <label
                   className="text-[20px] font-semibold text-[#666]"
                   htmlFor="cardNumber"
@@ -514,7 +540,7 @@ const HomePage = () => {
               </div>
 
               <div className="flex flex-col md:flex-row items-center mt-6 gap-7  w-full justify-between">
-                <div className="flex flex-col w-full space-y-2">
+                <div className="space-y-2 flex flex-col w-full">
                   <label
                     className="text-[20px] font-semibold text-[#666]"
                     htmlFor="expiryMonth"
@@ -525,22 +551,24 @@ const HomePage = () => {
                     {...register("expiryMonth", {
                       required: "Expiry Month is required",
                     })}
-                    className={`outline-none focus:border-blue-300  text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded ${
+                    className={`outline-none focus:border-blue-300 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded ${
                       errors.expiryMonth ? "border-red-500" : ""
                     }`}
                   >
+                    <option value="">Select</option>
                     <option value="0">0</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
                   </select>
                   {errors.expiryMonth && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-2">
                       {errors.expiryMonth.message}
                     </p>
                   )}
                 </div>
-                <div className="flex flex-col w-full space-y-2">
+
+                <div className="space-y-2 flex flex-col w-full">
                   <label
                     className="text-[20px] font-semibold text-[#666]"
                     htmlFor="expiryYear"
@@ -551,22 +579,24 @@ const HomePage = () => {
                     {...register("expiryYear", {
                       required: "Expiry Year is required",
                     })}
-                    className={`outline-none focus:border-blue-300 px-4 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded ${
+                    className={`outline-none focus:border-blue-300 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded ${
                       errors.expiryYear ? "border-red-500" : ""
                     }`}
                   >
+                    <option value="">Select</option>
                     <option value="000">000</option>
                     <option value="2023">2023</option>
                     <option value="2024">2024</option>
                     <option value="2025">2025</option>
                   </select>
                   {errors.expiryYear && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-2">
                       {errors.expiryYear.message}
                     </p>
                   )}
                 </div>
-                <div className="flex flex-col w-full space-y-2">
+
+                <div className="space-y-2 flex flex-col w-full">
                   <label
                     className="text-[20px] font-semibold text-[#666]"
                     htmlFor="cv"
@@ -577,17 +607,18 @@ const HomePage = () => {
                     {...register("cv", {
                       required: "CV is required",
                     })}
-                    className={`outline-none focus:border-blue-300 px-4 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded ${
+                    className={`outline-none focus:border-blue-300 text-[17px] border-2 py-4 w-full border-[#E7E7E7] rounded ${
                       errors.cv ? "border-red-500" : ""
                     }`}
                   >
-                    <option value="000">000</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
+                    <option value="">Select</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
                   </select>
                   {errors.cv && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-sm mt-2">
                       {errors.cv.message}
                     </p>
                   )}
@@ -601,6 +632,28 @@ const HomePage = () => {
     }
   };
 
+  // Function to update form data for each step
+  const updateFormData = (step: number, data: any) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [step]: data,
+    }));
+  };
+
+  const handleFormSubmit = () => {
+    // Combine form data from all steps
+    const formDataAllSteps = {
+      step1: formData.step1,
+      step2: formData.step2,
+      step3: getValues(), // Use getValues to get data for the current step (step3)
+    };
+
+    // Log the combined form data
+    console.log("Form data submitted:", formDataAllSteps);
+
+    // You can submit this data to your backend or perform any other necessary actions
+  };
+
   return (
     <div>
       <div className="flex flex-col lg:flex-row my-[5%] px-3 md:px-10 2xl:px-0 mx-auto lg:justify-center gap-[28px]">
@@ -611,9 +664,8 @@ const HomePage = () => {
           <Steps activeStep={activeStep} />
           <div className="w-full h-[1px] bg-gray-300 mt-4"></div>
           <div className="">
-            <form>
+            <form onSubmit={handleSubmit(handleFormSubmit)}>
               {renderFormFields()}
-
               <div className="w-full space-x-10 justify-between flex mx-auto my-[100px]">
                 {activeStep !== 1 && (
                   <button
@@ -628,16 +680,20 @@ const HomePage = () => {
                   <button
                     type="submit"
                     className="text-white rounded-md text-[20px] w-full bg-[#0967AF] font-semibold py-4"
-                    disabled={!isStepValid(activeStep)}
+                    disabled={!validateStepFields(activeStep)}
                   >
                     Submit
                   </button>
                 ) : (
                   <button
                     type="button"
-                    onClick={handleNextClick}
+                    onClick={() => {
+                      // Store form data for the current step
+                      updateFormData(activeStep, getValues());
+                      handleNextClick();
+                    }}
                     className={`text-white rounded-md text-[20px] w-full bg-[#0967AF] font-semibold py-4`}
-                    disabled={!isStepValid(activeStep)}
+                    disabled={!validateStepFields(activeStep)}
                   >
                     {loading ? "Loading..." : "Next"}
                   </button>
