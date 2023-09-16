@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setActiveStep, setStepValid } from "../redux/stepSlice";
 import { RootState } from "@/redux/store";
 import img from "../assets/img/dot.png";
+import { HiCheckCircle } from "react-icons/hi";
 
 import {
   AiFillEyeInvisible,
@@ -32,6 +33,8 @@ const HomePage = () => {
   const [borderColor, setBorderColor] = useState("gray");
   const [showErrors, setShowErrors] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
 
   const {
     handleSubmit,
@@ -655,10 +658,27 @@ const HomePage = () => {
       step3: step3Data,
     };
 
-    // Log the combined form data when the form is submitted
-    console.log("Form data submitted:", formDataAllSteps);
-    // You can submit this data to your backend or perform any other necessary actions
+    // Send a POST request to your API
+    fetch("http://localhost:5000/api/formdata", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ data: formDataAllSteps }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.message);
+        // Show the success message
+        setShowPopup(true);
+        setPopupMessage(data.message);
+      })
+      .catch((error) => {
+        // Handle any errors that occur during the fetch
+        console.error("Error:", error);
+      });
   };
+
   return (
     <div>
       <div className="flex flex-col lg:flex-row my-[5%] px-3 md:px-10 2xl:px-0 mx-auto lg:justify-center gap-[28px]">
@@ -701,6 +721,31 @@ const HomePage = () => {
                 )}
               </div>
             </form>
+
+            {/* Popup for successful form data */}
+            {showPopup && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-white shadow w-[70%] h-[300px] lg:w-[550px] lg:h-[400px] flex flex-col items-center justify-center  rounded-md">
+                  <div className="flex justify-center">
+                    <button className="text-7xl text-green-700">
+                      <HiCheckCircle></HiCheckCircle>
+                    </button>
+                  </div>
+                  <p className="text-2xl font-bold mt-3 mb-4 text-center">
+                    {popupMessage ? popupMessage : "Form submitted Successful!"}
+                  </p>
+
+                  <div className="flex justify-center space-x-4 items-center mt-8">
+                    <button
+                      className="px-6 py-2 bg-purple-700 text-white rounded-sm font-bold"
+                      onClick={() => setShowPopup(false)}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
